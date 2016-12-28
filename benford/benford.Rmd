@@ -1,0 +1,31 @@
+---
+author: "Jonathan Hill"
+date: "December 15, 2016"
+output: 
+  html_document:
+    theme: null
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+require(plotly); require(dplyr)
+```
+
+
+Benford's Law states that the leading significant digit of many *naturally* occurring numbers will likely be small. For example, in sets which obey the law, the number 1 appears as the most significant digit about 30% of the time, while 9 appears as the most significant digit less than 5% of the time. By contrast, if the digits were distributed uniformly, they would each occur about 11.1% of the time. This is Benford's Law's theoretical probability distribution:
+
+$$ P(d) = \log\left(1 + \frac{1}{d}\right)$$
+
+
+
+```{r, warning=F, fig.align='center'}
+# As an R function:
+benfords_law <- function(d) log10(1 + 1/d)
+
+# Plotted
+plot_ly(x = 1:9, y = benfords_law(1:9), type = 'bar') %>% 
+  layout(yaxis = list(title = 'P(d)'), xaxis = list(title = 'd'))
+```
+
+*Benford's Law is a theoretical probability distribution that can be leveraged to detect data quality issues, fraudulent behavior or other data anomolies by looking for data which deviate from this pattern.  In order to get the best results, it is often best to compare past deviations where there are no known issues to your test set rather than relying on a direct comparison with the theoretical distribution.*
+

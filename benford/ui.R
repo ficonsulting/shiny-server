@@ -1,6 +1,6 @@
 
 shinyUI(
-  fluidPage(theme = shinytheme('journal'),
+  fluidPage(theme = 'clean-blog.min.css', includeCSS('www/syntax.css'),
   
   fluidRow(
     column(width = 4, 
@@ -18,7 +18,7 @@ shinyUI(
     uiOutput('cols'),
     uiOutput('digs')),
   
-  bsModal('more_modal', "Benford's Theory", 'morebtn', size = 'large',
+  bsModal('more_modal', "Benford's Theoretical Distribution", 'morebtn', size = 'large',
           includeHTML('benford.html')),
   
   hr(), 

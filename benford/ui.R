@@ -2,7 +2,7 @@
 shinyUI(
   navbarPage("Benford's Law", theme = "readable.min.css",
     tabPanel("About", icon = icon('info-circle'), 
-      includeHTML('benford.html')),
+      fluidPage(fluidRow(column(width = 8, offset = 2, includeHTML('benford.html'))))),
     tabPanel("Analysis", icon = icon('bar-chart'), 
              
   fluidPage(

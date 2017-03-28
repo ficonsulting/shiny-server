@@ -29,15 +29,6 @@ shinyServer(function(input, output, session) {
     } else {NULL}
   })
   
-  # # More info modal
-  # observeEvent(input$morebtn, {
-  #   showModal(modalDialog(
-  #     includeHTML('benford.html'),
-  #     title = "Benford's Theory",
-  #     size = 'm', easyClose = T
-  #   ))
-  # })
-  
   output$cols <- renderUI({
     column(width = 4, 
          selectInput('vars', 'Column Tested:',

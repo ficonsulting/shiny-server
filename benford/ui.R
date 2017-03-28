@@ -1,12 +1,11 @@
 
 shinyUI(
-  fluidPage(theme = 'clean-blog.min.css', includeCSS('www/syntax.css'),
-  
-  fluidRow(
-    column(width = 4, 
-      titlePanel("Benford's Law")),
-    column(width = 8, 
-      div(actionButton('morebtn', 'More info', icon = icon('info')), align = 'right'))),
+  navbarPage("Benford's Law", theme = shinytheme("journal"),
+    tabPanel("About", icon = icon('info-circle'), 
+      includeCSS('www/syntax.css'), includeHTML('benford.html')),
+    tabPanel("Analysis", icon = icon('bar-chart'), 
+             
+  fluidPage(
   
   fluidRow(
     column(width = 4,
@@ -17,9 +16,6 @@ shinyUI(
            uiOutput('csv_selector')),
     uiOutput('cols'),
     uiOutput('digs')),
-  
-  bsModal('more_modal', "Benford's Theoretical Distribution", 'morebtn', size = 'large',
-          includeHTML('benford.html')),
   
   hr(), 
   
@@ -34,6 +30,4 @@ shinyUI(
            h3('Summary Stats:'),
            tableOutput('info')))
   
-  
-  
-))
+))))

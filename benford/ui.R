@@ -1,8 +1,8 @@
 
 shinyUI(
-  navbarPage("Benford's Law", theme = shinytheme("journal"),
+  navbarPage("Benford's Law", theme = "readable.min.css",
     tabPanel("About", icon = icon('info-circle'), 
-      includeCSS('www/syntax.css'), includeHTML('benford.html')),
+      includeHTML('benford.html')),
     tabPanel("Analysis", icon = icon('bar-chart'), 
              
   fluidPage(

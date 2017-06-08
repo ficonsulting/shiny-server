@@ -1,0 +1,21 @@
+---
+title: "Federal Credit Supplement Reestimate Application"
+output: pdf_document
+---
+
+## Application Overview
+
+This application allows users to interactively explore roughly 20 years of data published in the Federal Credit Supplement (FCS) to the President's Budget.  The data is scraped from tables 7 and 8 of the FCS which outline reestimate results for Federal credit programs.  
+
+## How to Use the App
+
+* Manipulate the drop-down menu in the upper right hand corner to view the FCS data by agency or program.
+* On the left hand side select an agency via the drop-down menu and choose a budget year using the slider. These inputs act as filters which will update the visualizations.  
+* If viewing the FCS by program, click on a value in the table below the budget year slider to see corresponding visualizations for the selected program.
+
+## Visualizations
+
+* The scatter plot shows the distribution of subsidy rate changes for the selected agency or program.  The x coordinate is the original subsidy rate and the y coordinate is the current subsidy rate.  Each point represents a program cohort.
+* For agencies there is an option to view a bubble plot of the cohort subsidy rate distribution.  The marker size is scaled by lifetime disbursements.
+* The current and lifetime reestimate plot shows the historic trend of agency or program current and lifetime reestimates up to the selected budget year.
+* On the right-hand side of the page are interactive bar and dumbbell plots.  Choose an x-axis metric using the metric drop-down menu and select a variable to group by using the radio buttons.  The options will depend on whether you view the data by agency or program.

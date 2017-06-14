@@ -16,7 +16,7 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(echo = FALSE)
 
 # Load data, packages, and custom scripts
-load("reestimate_rates.RData")
+load("../data/reestimate_rates.RData")
 
 require(plotly); require(dplyr); require(htmlTable)
 
@@ -303,14 +303,14 @@ for (p in top_list) {
 
 The plot below displays how disbursements have increased for these top programs over the last decade.  The lines show the change in lifetime disbursements relative to what was reported as of 2006.  The two housing programs have grown steadily following the housing downturn with total disbursements having increased about 200% for each program. The Federal Direct Student loan program on the other hand has sharply grown to over 700% of what was reported as of budget year 2006.  Some of this volume appears to have been shifted from the FFEL (Federal Family Education Loan) Guarantee program as loans are no longer originated under this program, however older cohorts still undergo subsidy re-estimates on a yearly basis.
 
-
+<center>
 ```{r}
 
 plot_lines(top_five, 'pct_chg', 'prog', 'Lifetime Disbursement Growth - Top Five Programs', 
            'Percent Change Relative 2006 Disbursements')
 
 ```
-
+</center>
 
 #### Subsidy Rate Re-Estimates
 
@@ -318,6 +318,7 @@ As mentioned in the introduction, the subsidy cost of each program cohort is est
 
 The following plot shows the distribution of changes in subsidy estimates for all loan cohorts published in the most recent FCS.  Each dot represents a cohort of loans, the x coordinate is the original subsidy rate and the y coordinate is the most recent subsidy rate re-estimate.  Any dot that lands on the dotted red line indicates that the current subsidy rate is equal to the original forecast.  Any point that falls below the dotted line has had a decrease in subsidy rate (downward re-estimate) and any point above has had a subsidy rate increase (upward re-estimate).  As of the most recent fiscal year, approximately 42% of all active cohorts have had a subsidy rate increase since origination.   
 
+<center>
 ```{r}
 
 #plot_ly(data = lastyear, x = ~orig_sr, y = ~cur_sr, type = 'scatter', mode = 'markers')
@@ -372,7 +373,7 @@ plot_ly(lastyear, x = ~orig_sr, y = ~cur_sr,
                    )
 
 ```
-
+</center>
 ***
 
 Most points on the above scatter plot are clustered around the red dashed line which represents a perfect subsidy forecast, however there are several outliers that have had dramatic increases or decreases in subsidy rate.  To further investigate the distribution and directionality of subsidy rate re-estimates for specific populations within the FCS check out the application included with this post. Users can view this scatter plot by agency or program and also drill down to the cohort level to see the change in subsidy rates due to interest and technical updates.
@@ -385,6 +386,7 @@ Current re-estimate amounts represent the change in subsidy cost in dollars as o
 
 Taking a snapshot of the 2018 budget year FCS, we'll first look at current re-estimate amounts.  We can see that both the Department of Education and HUD had large upward reestimates totaling approximately \$55B.  Cumualtive re-estimates in the last fiscal year across all agencies equal \$45.36B.   
 
+<center>
 ```{r}
 
 lre_ly <- lre %>% filter(fy == max(fy))
@@ -392,14 +394,16 @@ lre_ly <- lre %>% filter(fy == max(fy))
 compare_bars(lre_ly, 'h1', 'curr_re', 'Current Re-estimates by Agency - 2018 FCS', 160)
 
 ```
+</center>
 
 In reviewing agency lifetime re-estimates we see that active Treasury Department programs have experienced \$100B in downward lifetime re-estimates. The Department of Housing and Urban Development on the other hand has undergone over \$80B in upward re-estimates, meaning that in aggregate subsidy cost forecasts have been revised upward for active HUD programs.  While we did see a fairly large net upward re-estimate in the most recent fiscal year, total net lifetime reestimates remain negative at -\$20.4B for all active Federal Credit programs.  To view historical trends in reestimate amounts by agency and program visit the application. 
 
+<center>
 ```{r}
 
 compare_bars(lre_ly, 'h1', 'life_re', 'Lifetime Re-estimates by Agency - 2018 FCS', 160)
 ```
-
+</center>
 
 ***
 
@@ -409,6 +413,7 @@ We just saw that Treasury Department programs have ended up costing \$100B less 
 
 Many of these programs have ended up costing far less than initially forecasted.  One extreme case is the Treasury's \$100M [Term Asset Backed Securities Loan Facility](https://www.treasury.gov/initiatives/financial-stability/TARP-Programs/credit-market-programs/talf/Pages/default.aspx) (TALF) deployed in 2009.  This program had an original subsidy rate of -104% and was last reported in the budget year 2017 FCS as having a subsidy rate of -605%.   The negative subsidy rate implies that lifetime cash inflows exceed outflows - in this case by a factor of six - therefore the cost of the program is negative. The following bubble plot shows the distribution of changes in subsidy rate weighted by cohort size for all Treasury program cohorts created in 2009 or later.  
 
+<center>
 ```{r}
 
 # remove any programs that have cohorts prior to 2008
@@ -520,6 +525,7 @@ treasury_programs <- treasury_programs %>%
   
 
 ```
+</center>
 
 The current and original subsidy rate values are as of the cohort's most recent entry in the Federal Credit Supplement (for instance if the cohort was last recorded in the FCS in 2015, the current subsidy rate equals the value in 2015). There are several high-profile programs such as the [Automotive Industry Financing Program](https://www.treasury.gov/initiatives/financial-stability/TARP-Programs/automotive-programs/Pages/default.aspx) and [AIG Investments](https://www.treasury.gov/initiatives/financial-stability/TARP-Programs/aig/Pages/default.aspx) program that experienced a decrease in subsidy forecast.  In total `r pct_neg[['pct']]` of Treasury cohort subsidy rates have declined since origination. 
 
@@ -529,6 +535,7 @@ The current and original subsidy rate values are as of the cohort's most recent 
 
 Lifetime re-estimate amounts total approximately -\$191B for Treasury programs (including currently inactive programs) created after 2008.  TARP programs were the major drivers behind the downward re-estimates. Some large programs with high initial subsidy cost estimates like the \$204B 2009 cohort of the TARP [Capital Purchase Program](https://www.treasury.gov/initiatives/financial-stability/TARP-Programs/bank-investment-programs/cap/Pages/default.aspx) (original subsidy rate of 27%) ended up being profitable for the Treasury department (current subsidy rate of -3.46%).  
 
+<center>
 ```{r}
 
 # Bar chart of lifetime re-estimate for each h2
@@ -542,7 +549,7 @@ compare_bars(bar_data, 'h2', 'life_re', 'Lifetime Re-estimates - Treasury Progra
 #compare_bars(bar_data, 'h2', 'life_disb', 'Lifetime Disbursements - Treasury Programs', 200, 'right')
 
 ```
-
+</center>
 ***
 
 
@@ -572,6 +579,8 @@ Because agency, bureau, program and cohort year values are all contained in one 
 
 Post data wrangling the re-estimate data from the above example is organized like so:
 
+<center>
+
 ```{r message=FALSE}
 
 prep_ex <-re %>% filter(fy == 2017 & prog == 'FARM OWNERSHIP' & type == 'LG')
@@ -588,6 +597,7 @@ htmlTable(head(data_prep, n = 5),
           css.cell = 'padding: 3px 30px 3px;')
 
 ```
+</center>
 
 ***
 

@@ -2,6 +2,41 @@
 # 
 shinyServer(function(input, output, session) {
   
+  output$zoom_ui <- renderUI({
+    
+    if (is.null(input$GetScreenWidth)) {
+      NULL
+    } else if (input$GetScreenWidth >= 1920) {
+      
+      tags$style("body {
+                 -moz-transform: scale(.8, .8); /* Moz-browsers */
+                 zoom: .8; /* Other non-webkit browsers */
+                 zoom: 80%; /* Webkit browsers */
+                 }
+                 ")
+      
+    } else if (input$GetScreenWidth >= 1400) {
+    
+      tags$style("body {
+                -moz-transform: scale(.6, .6); /* Moz-browsers */
+                zoom: .6; /* Other non-webkit browsers */
+                zoom: 60%; /* Webkit browsers */
+                }
+                ")
+    
+    } else {
+  
+      tags$style("body {
+                -moz-transform: scale(.5, .5); /* Moz-browsers */
+                zoom: .5; /* Other non-webkit browsers */
+                zoom: 50%; /* Webkit browsers */
+                }
+                ")
+  
+    }
+
+  })
+  
   # ----------------------------------- UI Elements --------------------------------------------# 
   
   # Create Input for Navigation Bar - User can view data by Agency or Program

@@ -9,33 +9,37 @@ navbarPageWithInputs <- function(..., inputs) {
   navbar
 }
 
+# Custom Function to get screen resolution
+jscode <-
+  '$(document).on("shiny:connected", function(e) {
+var jsWidth = screen.width;
+Shiny.onInputChange("GetScreenWidth",jsWidth);
+});
+'
+
+
 shinyUI(
   
-  navbarPageWithInputs("FCS Reestimates", theme = "readable.min.css", id = 'menus',
-             
-             # actionButton('infoBut2', 'Information', icon = icon('info-circle', 
-             #                                                     lib = 'font-awesome')),
-             tabPanel("Analysis", icon = icon('file-text-o', lib = 'font-awesome'), 
-                      fluidPage(
-                        fluidRow(column(width = 8, offset = 2, 
-                                        includeHTML('FCS_Reestimates.html'))
-                                 )
-                        )
-                      ),
-             tabPanel("Interactive", icon = icon('bar-chart'), 
-                        # tags$style("
-                        #            body {
-                        #            -moz-transform: scale(.9, .9); /* Moz-browsers */
-                        #            zoom: .9; /* Other non-webkit browsers */
-                        #            zoom: 90%; /* Webkit browsers */
-                        #            }
-                        #            "),
-                      uiOutput('pageUI')
-                      
-             ),
-             inputs = uiOutput('changeView')
+  fluidPage(
+    tags$script(jscode),
+    uiOutput('zoom_ui'),
+    navbarPageWithInputs("FCS Reestimates", theme = "readable.min.css", id = 'menus',
+                         
+                         tabPanel("Analysis", icon = icon('file-text-o', lib = 'font-awesome'), 
+                                  fluidPage(
+                                    fluidRow(column(width = 10, offset = 1, 
+                                                    includeHTML('FCS_Reestimates.html'))
+                                    )
+                                  )
+                         ),
+                         tabPanel("Interactive", icon = icon('bar-chart'),
+                                  
+                                  uiOutput('pageUI')
+                                  
+                         ),
+                         inputs = uiOutput('changeView')
+    )
   )
-
+  
 )
-
 

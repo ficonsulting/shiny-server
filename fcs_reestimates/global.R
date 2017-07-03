@@ -120,7 +120,7 @@ get_caption <- function(plot_data, input_type) {
   
 }
 
-prepare_bar_data <- function(plot_data, lab, metric, input_type) {
+prepare_bar_data <- function(plot_data, lab, metric) {
   
   df <- plot_data %>% group_by_(lab) %>%
     summarise_(sum_val = interp(~sum(var, na.rm = T), var = as.name(metric))) %>%

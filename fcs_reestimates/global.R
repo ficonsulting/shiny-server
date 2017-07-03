@@ -33,15 +33,15 @@ re <- reestimate_rates[!reestimate_rates$prog %in% edu_progs,] %>%
 agency_list <- unique(reestimate_rates$h1) %>% sort()
 
 program_metric_choices = c('Lifetime Reestimates' = 'life_re',
-            'Current Reestimates' = 'cur_re',
-            'Lifetime Disbursements' = 'disb')
+                           'Current Reestimates' = 'cur_re',
+                           'Lifetime Disbursements' = 'disb')
 
 cohort_metric_choices = c('Lifetime Reestimates' = 'life_re',
-            'Current Reestimates' = 'cur_re',
-            'Lifetime Disbursements' = 'disb',
-            'Total Subsidy Change' = 'rate_chg',
-            'Subsidy Change - Technical' = 'perc_chg_tech',
-            'Subsidy Change - Interest' = 'perc_chg_int')
+                          'Current Reestimates' = 'cur_re',
+                          'Lifetime Disbursements' = 'disb',
+                          'Total Subsidy Change' = 'rate_chg',
+                          'Subsidy Change - Technical' = 'perc_chg_tech',
+                          'Subsidy Change - Interest' = 'perc_chg_int')
 
 # ------------------- UI and Formatting Functions ----------------------------------------------- #
 
@@ -49,7 +49,7 @@ insert_panel <- function(heading, outname) {
   
   tags$div(class = "panel panel-default",
            tags$div(class = "panel-heading",
-                    tags$div(h2(class = "panel-title", heading))),
+                    tags$div(h4(class = "panel-title", heading))),
            tags$div(class = "panel-body",
                     htmlOutput(outname)))
   
@@ -108,9 +108,9 @@ get_caption <- function(plot_data, input_type) {
   }
   
   
-  if (nchar(caption) > 30) {
+  if (nchar(caption) > 35) {
     
-    paste(substr(caption, 1, 30), '...')
+    paste(substr(caption, 1, 35), '...')
     
   } else {
     
@@ -122,19 +122,9 @@ get_caption <- function(plot_data, input_type) {
 
 prepare_bar_data <- function(plot_data, lab, metric, input_type) {
   
-  if (input_type != 'All') {
-    
-    df <- plot_data %>% filter(type == input_type) %>% group_by_(lab) %>%
-      summarise_(sum_val = interp(~sum(var, na.rm = T), var = as.name(metric))) %>%
-      ungroup()
-    
-  } else {
-  
-    df <- plot_data %>% group_by_(lab) %>%
-      summarise_(sum_val = interp(~sum(var, na.rm = T), var = as.name(metric))) %>%
-      ungroup()
-  
-  }
+  df <- plot_data %>% group_by_(lab) %>%
+    summarise_(sum_val = interp(~sum(var, na.rm = T), var = as.name(metric))) %>%
+    ungroup()
   
   df <- if (lab != 'co_yr') {
     df %>% arrange(sum_val)
@@ -143,7 +133,7 @@ prepare_bar_data <- function(plot_data, lab, metric, input_type) {
   }
   
   df$wrap <- sapply(df[[lab]], FUN = function(x) 
-    {paste(strwrap(x, width = 25), collapse = "<br>")})
+  {paste(strwrap(x, width = 25), collapse = "<br>")})
   
   #return(df)
   
@@ -155,7 +145,7 @@ prepare_bar_data <- function(plot_data, lab, metric, input_type) {
 
 # ---------------------------------- Plotting Functions ------------------------------------ #
 
-compare_bars <- function(df, lab, plt_title) {
+compare_bars <- function(df, lab, plt_title, xaxis) {
   
   margin <- ifelse(lab == 'co_yr', 50, 200)
   ftsize <- ifelse(lab == 'co_yr', 16, 10)
@@ -169,7 +159,7 @@ compare_bars <- function(df, lab, plt_title) {
                                     width = 1.5))) %>%
     layout(title = plt_title,
            titlefont = list(size = 16),
-           xaxis = list(title = ""),
+           xaxis = list(title = xaxis),
            yaxis = list(title = "", tickfont = list(size = ftsize)),
            margin = list(l = margin))
   
@@ -178,45 +168,45 @@ compare_bars <- function(df, lab, plt_title) {
 dumbbell_plt <- function(df, metric, plt_title) {
   
   if (metric == 'rate_chg') {
-  
-  plot_ly(df, color = I("gray80")) %>%
-    add_segments(x = ~orig_sr, xend = ~cur_sr, y = ~co_yr, yend = ~co_yr, showlegend = FALSE,
-                 line = list(width = 3)) %>%
-    add_markers(x = ~orig_sr, y = ~co_yr, name = "Original Rate", color = I("#41E1F0"), 
-                marker = list(size = 8, line = list(color = "#068591", width = 2))) %>%
-    add_markers(x = ~cur_sr, y = ~co_yr, name = "Current Rate", color = I("#7A6CF7"), 
-                marker = list(size = 8, line = list(color = "#0A0B2E", width = 2))) %>%
-    layout(
-      title = plt_title,
-      titlefont = list(size = 16),
-      xaxis = list(title = "Subsidy Rate",
-                   showticklabels = TRUE,
-                   showgrid = FALSE),
-      yaxis = list(showticklabels = TRUE,
-                   showgrid = FALSE,
-                   title = 'Cohort'),
-      legend = list(orientation = 'h'))
+    
+    plot_ly(df, color = I("gray80")) %>%
+      add_segments(x = ~orig_sr, xend = ~cur_sr, y = ~co_yr, yend = ~co_yr, showlegend = FALSE,
+                   line = list(width = 3)) %>%
+      add_markers(x = ~orig_sr, y = ~co_yr, name = "Original Rate", color = I("#41E1F0"), 
+                  marker = list(size = 8, line = list(color = "#068591", width = 2))) %>%
+      add_markers(x = ~cur_sr, y = ~co_yr, name = "Current Rate", color = I("#7A6CF7"), 
+                  marker = list(size = 8, line = list(color = "#0A0B2E", width = 2))) %>%
+      layout(
+        title = plt_title,
+        titlefont = list(size = 16),
+        xaxis = list(title = "Subsidy Rate",
+                     showticklabels = TRUE,
+                     showgrid = FALSE),
+        yaxis = list(showticklabels = TRUE,
+                     showgrid = FALSE,
+                     title = 'Cohort'),
+        legend = list(orientation = 'h'))
     
   } else {
-  
-  plot_ly(df, color = I("gray80")) %>%
-    add_segments(x = 0, xend = ~get(metric), y = ~co_yr, yend = ~co_yr, showlegend = FALSE,
-                 line = list(width = 3)) %>%
-    add_markers(x = ~get(metric), y = ~co_yr, name = "Current Rate", color = I("#7A6CF7"), 
-                marker = list(size = 8, line = list(color = "#0A0B2E", width = 2))) %>%
-    layout(
-      title = plt_title,
-      titlefont = list(size = 16),
-      xaxis = list(title = "Subsidy Rate",
-                   showticklabels = TRUE,
-                   showgrid = FALSE),
-      yaxis = list(showticklabels = TRUE,
-                   showgrid = FALSE,
-                   title = 'Cohort'),
-      legend = list(orientation = 'h'))
+    
+    plot_ly(df, color = I("gray80")) %>%
+      add_segments(x = 0, xend = ~get(metric), y = ~co_yr, yend = ~co_yr, showlegend = FALSE,
+                   line = list(width = 3)) %>%
+      add_markers(x = ~get(metric), y = ~co_yr, name = "Current Rate", color = I("#7A6CF7"), 
+                  marker = list(size = 8, line = list(color = "#0A0B2E", width = 2))) %>%
+      layout(
+        title = plt_title,
+        titlefont = list(size = 16),
+        xaxis = list(title = "Subsidy Rate",
+                     showticklabels = TRUE,
+                     showgrid = FALSE),
+        yaxis = list(showticklabels = TRUE,
+                     showgrid = FALSE,
+                     title = 'Cohort'),
+        legend = list(orientation = 'h'))
     
   }
-
+  
 }
 
 
@@ -260,14 +250,18 @@ bubble_plot <- function(df, in_fy) {
   )
   
   caption <- plot_data[1,][['h1']]
-
+  
   
   plot_ly(plot_data,  
           x = ~orig_sr, y = ~cur_sr, color = ~wrapped_label, size = ~size, colors = 'Paired',
           type = 'scatter', mode = 'markers', sizes = c(min(plot_data$size, na.rm = T) + 5, 
                                                         min(mean(plot_data$size, na.rm = T), 125) + 5),
           marker = list(symbol = 'circle', sizemode = 'diameter',
-                        line = list(width = 2, color = '#000000'))) %>%
+                        line = list(width = 2, color = '#000000')),
+          text = ~paste('Cohort:', co_yr, '</br> Program:', prog,
+                        '</br> Original Rate:', round(orig_sr, 2),
+                        '</br> Current Rate:', round(cur_sr, 2)),
+          hoverinfo = 'text') %>%
     layout(title = paste('Subsidy Distribution By Cohort \u2013', caption),
            shapes = list(
              type = 'line',

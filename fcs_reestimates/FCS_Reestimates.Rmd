@@ -9,14 +9,14 @@ output:
 
 ```{r include=FALSE}
 
-knitr::opts_chunk$set(fig.width=12, fig.height=6) 
+knitr::opts_chunk$set(out.width="90%", fig.height=6) 
 
 knitr::opts_chunk$set(warning = FALSE)
 
 knitr::opts_chunk$set(echo = FALSE)
 
 # Load data, packages, and custom scripts
-load("../data/reestimate_rates.RData")
+load("reestimate_rates.RData")
 
 require(plotly); require(dplyr); require(htmlTable)
 
@@ -269,7 +269,7 @@ htmlTable(head(prog_table, 5),
           col.rgroup = c("none", "#F7F7F7"),
           align = 'lllrr',
           align.header = 'c',
-          css.cell = 'padding: 3px 50px 3px;')
+          css.cell = 'padding: 3px 35px 3px;')
 
 
 ```
@@ -573,7 +573,7 @@ Because agency, bureau, program and cohort year values are all contained in one 
 
 <center>
 
-![(FCS Example - 2017)](app/www/fcs_example.PNG)
+![(FCS Example - 2017)](www/fcs_example.PNG){ width=90% }
 
 </center>
 

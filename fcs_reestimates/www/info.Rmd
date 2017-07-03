@@ -7,6 +7,8 @@ output: pdf_document
 
 This application allows users to interactively explore roughly 20 years of data published in the Federal Credit Supplement (FCS) to the President's Budget.  The data is scraped from tables 7 and 8 of the FCS which outline reestimate results for Federal credit programs.  
 
+For best performance zoom out to fit all tables and visualizations into one window.  
+
 ## How to Use the App
 
 * Manipulate the drop-down menu in the upper right hand corner to view the FCS data by agency or program.

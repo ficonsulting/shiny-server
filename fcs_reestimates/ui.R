@@ -1,29 +1,23 @@
 # ui.R
 
 # Custom Function to Add NavBar Input
-navbarPageWithInputs <- function(..., inputs) {
+navbarPageWithInputs <- function(..., input_view) {
   navbar <- navbarPage(...)
-  form <- tags$form(class = "navbar-form navbar-right", inputs)
+  form <- tags$form(class = "navbar-form navbar-right", input_view)
   navbar[[3]][[1]]$children[[1]] <- htmltools::tagAppendChild(
     navbar[[3]][[1]]$children[[1]], form)
   navbar
 }
 
-# Custom Function to get screen resolution
-jscode <-
-  '$(document).on("shiny:connected", function(e) {
-var jsWidth = screen.width;
-Shiny.onInputChange("GetScreenWidth",jsWidth);
-});
-'
-
-
 shinyUI(
   
   fluidPage(
-    tags$script(jscode),
-    uiOutput('zoom_ui'),
-    navbarPageWithInputs("FCS Reestimates", theme = "readable.min.css", id = 'menus',
+    tags$style(type = "text/css", "#xy_plot {height: 38vh !important;}"),
+    tags$style(type = "text/css", "#reestimate_plot {height: 38vh !important;}"),
+    tags$style(type = "text/css", "#bar_plots {height: 75vh !important;}"),
+    tags$style(type = "text/css", "#dumbbell_plots {height: 75vh !important;}"),
+    #tags$style(type = "text/css", ".panel-body {height: 10vh !important;}"),
+    navbarPageWithInputs("FCS Reestimates", theme = "flatly.min.css", id = 'menus',
                          
                          tabPanel("Analysis", icon = icon('file-text-o', lib = 'font-awesome'), 
                                   fluidPage(
@@ -37,9 +31,10 @@ shinyUI(
                                   uiOutput('pageUI')
                                   
                          ),
-                         inputs = uiOutput('changeView')
+                         input_view = uiOutput('changeView')
     )
   )
   
 )
+
 

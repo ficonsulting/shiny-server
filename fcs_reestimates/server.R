@@ -2,56 +2,21 @@
 # 
 shinyServer(function(input, output, session) {
   
-  output$zoom_ui <- renderUI({
-    
-    if (is.null(input$GetScreenWidth)) {
-      NULL
-    } else if (input$GetScreenWidth >= 1920) {
-      
-      tags$style("body {
-                 -moz-transform: scale(.8, .8); /* Moz-browsers */
-                 zoom: .8; /* Other non-webkit browsers */
-                 zoom: 80%; /* Webkit browsers */
-                 }
-                 ")
-      
-    } else if (input$GetScreenWidth >= 1400) {
-    
-      tags$style("body {
-                -moz-transform: scale(.6, .6); /* Moz-browsers */
-                zoom: .6; /* Other non-webkit browsers */
-                zoom: 60%; /* Webkit browsers */
-                }
-                ")
-    
-    } else {
-  
-      tags$style("body {
-                -moz-transform: scale(.5, .5); /* Moz-browsers */
-                zoom: .5; /* Other non-webkit browsers */
-                zoom: 50%; /* Webkit browsers */
-                }
-                ")
-  
-    }
-
-  })
-  
   # ----------------------------------- UI Elements --------------------------------------------# 
   
   # Create Input for Navigation Bar - User can view data by Agency or Program
   
   output$changeView <- renderUI({
-
-     if (input$menus == 'Interactive') {
-   
-       selectInput('view_type', NULL, choices = c('View By Agency' = 'Agency', 
-                                                  'View By Program' = 'Program'))
- 
-     }
-
-   })
-
+    
+    if (input$menus == 'Interactive') {
+      
+      selectInput('view_type', NULL, choices = c('View By Agency' = 'Agency', 
+                                                 'View By Program' = 'Program'))
+      
+    }
+    
+  })
+  
   # Render UI based on input view - Agency or Program
   
   output$pageUI <- renderUI({
@@ -62,59 +27,60 @@ shinyServer(function(input, output, session) {
       
       fluidPage(
         fluidRow(
-          column(width = 3,
-                 column(width = 7,
-                        selectInput("agency",
-                                    "Select Agency:",
-                                    choices = agency_list,
-                                    selected = 'HUD')),
-                 column(width = 5, 'How To Use App:',
-                        actionButton('infoBut', 'Information', icon = icon('info-circle',
-                                                                             lib = 'font-awesome')),
-                        bsModal("infoModal", title = NULL, "infoBut", size = "large",
-                                includeMarkdown("www/info.Rmd"))
-                        
-                 ),
-                 sliderInput('fy', 'Select Budget Year:', width = '90%',
-                             min = 1998, max = 2018, value = 2018, sep = '', animate = T),
-                 hr(),
-                 uiOutput('panel1'),
-                 uiOutput('panel2'),
-                 uiOutput('panel3'),
-                 uiOutput('panel4')
-          ),
-          uiOutput('reestimateUI'),
-          uiOutput('barUI')
+          column(width = 4,
+                 fluidRow(column(width = 7, "Select Agency:",
+                                 selectInput("agency", NULL, choices = agency_list, selected = 'HUD', width = '100%')),
+                          column(width = 5, "How to Use App:",
+                                 actionButton('infoBut', 'Information', width = '90%',
+                                              icon = icon('info-circle', lib = 'font-awesome')),
+                                 bsModal("infoModal", title = NULL, "infoBut", size = "large",
+                                         includeMarkdown("www/info.Rmd")))),
+                 column(width = 12, 'Select Budget Year:', 
+                        sliderInput('fy', NULL, width = '90%',
+                                    min = 1998, max = 2018, value = 2018, sep = '', animate = T),
+                        h3("Agency Summary"),
+                        uiOutput('panel1'),
+                        uiOutput('panel2'),
+                        uiOutput('panel3'),
+                        uiOutput('panel4'))),
+          column(width = 7,
+                 tabsetPanel(
+                   tabPanel('Reestimate Plots', uiOutput('reestimateUI')),
+                   tabPanel('Bar Plots', uiOutput('barUI')))
+          )
         )
       )
+      
       
     } else {
       
       fluidPage(
         fluidRow(
-          column(width = 3,
+          column(width = 4,
                  column(width = 7,
-                        selectInput("agency",
-                                    "Select Agency:",
-                                    choices = agency_list,
-                                    selected = 'HUD')),
+                        selectInput("agency", "Select Agency:", choices = agency_list,
+                                    selected = 'HUD', width = '100%')),
                  column(width = 5, 'How To Use App:',
-                        actionButton('infoBut', 'Information', icon = icon('info-circle', 
-                                                                           lib = 'font-awesome')),
+                        actionButton('infoBut', 'Information', width = '90%', 
+                                     icon = icon('info-circle', lib = 'font-awesome')),
                         bsModal("infoModal", title = NULL, "infoBut", size = "large",
                                 includeMarkdown("www/info.Rmd"))
                  ),
-                 sliderInput('fy', 'Select Budget Year:', width = '90%',
-                             min = 1998, max = 2018, value = 2018, sep = '', animate = T),
-                 bsButton("ActOne", label = "Clear Program Selection", icon = icon("ban")),
-                 dataTableOutput('program_dt')
+                 column(width = 12, 'Select Budget Year:', 
+                        sliderInput('fy', NULL, width = '90%',
+                                    min = 1998, max = 2018, value = 2018, sep = '', animate = T),
+                        bsButton("ActOne", label = "Clear Program Selection"),
+                        dataTableOutput('program_dt')
+                 )
           ),
-          
-          uiOutput('reestimateUI'),
-          uiOutput('barUI')
+          column(width = 7,
+                 tabsetPanel(
+                   tabPanel('Reestimate Plots', uiOutput('reestimateUI')),
+                   tabPanel('Bar Plots', uiOutput('barUI')))
+          )
         )
       )
-  
+      
     }
     
   })
@@ -141,8 +107,8 @@ shinyServer(function(input, output, session) {
     
     if (input$view_type == 'Agency') {
       
-      column(width = 5,
-             column(offset = 1, width = 4,
+      column(width = 12,
+             column(width = 10,
                     radioButtons('scatter_radio', NULL, 
                                  choices = c('Scatter', 'Bubble'), inline = T)),
              column(width = 12,
@@ -153,14 +119,15 @@ shinyServer(function(input, output, session) {
       
     } else if (!is.null(program_df())) {
       
-      column(width = 5,
+      column(width = 12,
+             br(),
              uiOutput('xyUI'),
              hr(),
              plotlyOutput('reestimate_plot'))
       
     } else {
       
-      column(width = 5,
+      column(width = 12,
              htmlOutput('prog_warning'))
     }
     
@@ -169,13 +136,36 @@ shinyServer(function(input, output, session) {
   output$prog_warning <- renderUI({
     tags$html(
       tags$body(
-        h2('Select A Program'),
-        p('Choose an avaliable program from the table to the left along with a budget year 
-          to view interactive visualizations.'), 
-        p('Click the Clear Program Selection button to reset the view or click another value in the table 
-          to choose a different program.')
-      )
-    )
+        br(),
+        br(),
+        br(),
+        h2('Select a Program'),
+        br(),
+        p(h4('Choose an avaliable program from the table to the left along with a budget year 
+             to view interactive visualizations.')), 
+        br(),
+        p(h4('Click the Clear Program Selection button to reset the view or click another value in the table 
+             to choose a different program.'))
+        )
+        )
+    
+  })
+  
+  output$prog_warn <- renderUI({
+    tags$html(
+      tags$body(
+        br(),
+        br(),
+        br(),
+        h2('Select a Program'),
+        br(),
+        p(h4('Choose an avaliable program from the table to the left along with a budget year 
+             to view interactive visualizations.')), 
+        br(),
+        p(h4('Click the Clear Program Selection button to reset the view or click another value in the table 
+             to choose a different program.'))
+        )
+        )
     
   })
   
@@ -186,19 +176,19 @@ shinyServer(function(input, output, session) {
     
     if (input$view_type == 'Agency') {
       
-      column(width = 4,
+      column(width = 12,
              uiOutput('barplot_select'),
              uiOutput('barplot_radio'),
              hr(),
              column(width = 12,
-                    uiOutput('barplotUI'),
-                    uiOutput('typeUI')
+                    uiOutput('barplotUI')
+                    #uiOutput('typeUI')
              )
       )
       
     } else if (!is.null(program_df())) {
       
-      column(width = 4,
+      column(width = 12,
              uiOutput('barplot_select'),
              uiOutput('barplot_radio'),
              column(width = 12,
@@ -207,7 +197,8 @@ shinyServer(function(input, output, session) {
       
     } else {
       
-      NULL
+      column(width = 12,
+             htmlOutput('prog_warn'))
       
     }
     
@@ -219,11 +210,11 @@ shinyServer(function(input, output, session) {
     
     if (!input$bar_metric %in% c('disb', 'cur_re', 'life_re')) {
       
-      plotlyOutput('dumbbell_plots', height = 750)
+      plotlyOutput('dumbbell_plots')
       
     } else {
       
-      plotlyOutput('bar_plots', height = 750)
+      plotlyOutput('bar_plots')
       
     }
     
@@ -235,15 +226,13 @@ shinyServer(function(input, output, session) {
     if (input$view_type == 'Agency') {
       
       column(width = 6,
-             radioButtons('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr', 'Program Name' = 'prog'), 
-                          inline = T)
+             selectInput('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr', 'Program Name' = 'prog'))
       )
       
     } else {
       
       column(width = 6,
-             radioButtons('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr'),
-                          inline = T)
+             selectInput('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr'))
       )
       
     }
@@ -275,15 +264,6 @@ shinyServer(function(input, output, session) {
     
   })
   
-  output$typeUI <- renderUI({
-    column(width = 12, 
-           radioButtons('type', NULL, 
-                        choices = c('All Programs' = 'All', 
-                                    'Direct Loan Programs' = 'DL', 
-                                    'Loan Guarantee Programs' = 'LG'), inline = T))
-    
-  })
-  
   # Update Agency Selection based on buget year - Don't want to show agencies that aren't in FCS as of FY
   
   observe({
@@ -310,7 +290,7 @@ shinyServer(function(input, output, session) {
   })
   
   # Also for Program selection
- 
+  
   dd = reactiveValues(select=NULL, name = NULL, new_select = NULL)
   
   observeEvent(input$program_dt_rows_selected, {
@@ -325,20 +305,6 @@ shinyServer(function(input, output, session) {
     
     dd$name <- x[dd$select]
     
-    disabled = NULL
-    style = "default"
-    icon = ""
-    
-    if(is.null(dd$select)) {
-      disabled = TRUE
-      icon <- icon("ban")
-    } else {
-      disabled = FALSE
-    }
-    
-    updateButton(session, "ActOne", disabled = disabled, style = style, icon = icon)
-    
-    
   })
   
   observeEvent(input$fy, {
@@ -352,11 +318,11 @@ shinyServer(function(input, output, session) {
   })
   
   observeEvent(input$ActOne, ({
-
+    
     dd$select <- dd$new_select <- dd$name <- NULL
-
+    
   }))
-
+  
   # ------------------------- Create Agency and Program dfs ------------------------ #
   
   # Filter Reestimate Rates on Agency Selection
@@ -392,9 +358,9 @@ shinyServer(function(input, output, session) {
       NULL
       
     } else { 
-        
+      
       data.frame(prog = program_list()[dd$new_select,][['Program']],
-                   type = program_list()[dd$new_select,][['Type']])
+                 type = program_list()[dd$new_select,][['Type']])
     }
     
     return(df)
@@ -444,7 +410,7 @@ shinyServer(function(input, output, session) {
       paste('Disbursement Data Unavailable As of Budget Year Selection')
       
     } else {
-    
+      
       HTML(paste0('<h4>', top[['prog']], '</h4>', 'Lifetime Disbursements: ', top[['total_disb_format']]))
       
     }
@@ -493,7 +459,7 @@ shinyServer(function(input, output, session) {
     
   })
   
-
+  
   
   # -------------------- Create DT of Available Programs ---------------------------- #
   
@@ -533,33 +499,33 @@ shinyServer(function(input, output, session) {
   
   output$reestimate_plot <- renderPlotly({
     
-  # Get Underlying Data Depending on User Selections
+    # Get Underlying Data Depending on User Selections
     
-  plot_data <- get_plot_df(input$view_type, agency_df(), program_df())
+    plot_data <- get_plot_df(input$view_type, agency_df(), program_df())
     
     # Display temporary error message when toggling between user inputs
     
-  validate(need(length(nrow(plot_data)) > 0, 'Calculating...'))
+    validate(need(length(nrow(plot_data)) > 0, 'Calculating...'))
     
-  plot_data <- plot_data %>% filter(fy <= input$fy)
-  
-  caption <- get_caption(plot_data, input$view_type)
-  
-  # Get Lifetime Reestimate Amounts by Budget Year
-   
-  df_summary <- plot_data %>% group_by(fy) %>%
-    summarise(re_amt = sum(life_re, na.rm = T), curr_amt = sum(cur_re, na.rm = T))
-  
-  # Create Plot
-  
-  plot_ly(df_summary, x = ~fy, y = ~curr_amt, type = 'bar', name = 'Current </br>Reestimate') %>%
-    add_trace(y = ~re_amt, type = 'scatter', mode = 'markers+lines', name = 'Lifetime </br>Reestimate') %>%
-    layout(title = paste('Current and Lifetime Reestimates \u2013', caption),
-           xaxis = list(title = 'Budget Year'),
-           yaxis = list(title = ''),
-           barmode = 'relative',
-           legend = list(orientation = 'h'))
-   
+    plot_data <- plot_data %>% filter(fy <= input$fy)
+    
+    caption <- get_caption(plot_data, input$view_type)
+    
+    # Get Lifetime Reestimate Amounts by Budget Year
+    
+    df_summary <- plot_data %>% group_by(fy) %>%
+      summarise(re_amt = sum(life_re, na.rm = T), curr_amt = sum(cur_re, na.rm = T))
+    
+    # Create Plot
+    
+    plot_ly(df_summary, x = ~fy, y = ~curr_amt, type = 'bar', name = 'Current </br>Reestimate') %>%
+      add_trace(y = ~re_amt, type = 'scatter', mode = 'markers+lines', name = 'Lifetime </br>Reestimate') %>%
+      layout(title = paste('Current and Lifetime Reestimates \u2013', caption),
+             xaxis = list(title = 'Budget Year'),
+             yaxis = list(title = ''),
+             barmode = 'relative',
+             legend = list(orientation = 'h'))
+    
   })
   
   # ------------------------ Bar/Dumbbell Plots --------------------------------- # 
@@ -576,15 +542,16 @@ shinyServer(function(input, output, session) {
     
     plot_data <- plot_data %>% filter(fy == input$fy)
     
-    df <- prepare_bar_data(plot_data, input$grp_by, input$bar_metric, input$type)
+    df <- prepare_bar_data(plot_data, input$grp_by, input$bar_metric)
     
     caption <- get_caption(plot_data, input$view_type)
     
     plt_title <- paste(caption, '-', 
                        names(cohort_metric_choices[cohort_metric_choices == input$bar_metric]))
-      
-    compare_bars(df, input$grp_by, plt_title)
-      
+    
+    compare_bars(df, input$grp_by, plt_title, 
+                 names(cohort_metric_choices[cohort_metric_choices == input$bar_metric]))
+    
   })
   
   output$dumbbell_plots <- renderPlotly({
@@ -610,6 +577,6 @@ shinyServer(function(input, output, session) {
     
   })
   
-
-
+  
+  
 })

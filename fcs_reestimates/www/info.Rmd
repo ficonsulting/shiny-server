@@ -17,7 +17,7 @@ For best performance zoom out to fit all tables and visualizations into one wind
 
 ## Visualizations
 
-* The scatter plot shows the distribution of subsidy rate changes for the selected agency or program.  The x coordinate is the original subsidy rate and the y coordinate is the current subsidy rate.  Each point represents a program cohort.
+* The scatter plot under the Reestimate Trend Plots tab shows the distribution of subsidy rate changes for the selected agency or program.  The x coordinate is the original subsidy rate and the y coordinate is the current subsidy rate.  Each point represents a program cohort.
 * For agencies there is an option to view a bubble plot of the cohort subsidy rate distribution.  The marker size is scaled by lifetime disbursements.
 * The current and lifetime reestimate plot shows the historic trend of agency or program current and lifetime reestimates up to the selected budget year.
-* On the right-hand side of the page are interactive bar and dumbbell plots.  Choose an x-axis metric using the metric drop-down menu and select a variable to group by using the radio buttons.  The options will depend on whether you view the data by agency or program.
+* Under the Interactive Bar Plots tab are a variety of visualizations that summarize reestimate amounts, disbursements, and subsidy rate changes.  Choose an x-axis metric using the metric drop-down menu and select a variable to group by on the y-axis.  The options will depend on whether you view the data by agency or program.

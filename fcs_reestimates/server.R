@@ -45,8 +45,8 @@ shinyServer(function(input, output, session) {
                         uiOutput('panel4'))),
           column(width = 7,
                  tabsetPanel(
-                   tabPanel('Reestimate Plots', uiOutput('reestimateUI')),
-                   tabPanel('Bar Plots', uiOutput('barUI')))
+                   tabPanel('Reestimate Trend Plots', uiOutput('reestimateUI')),
+                   tabPanel('Interactive Bar Plots', uiOutput('barUI')))
           )
         )
       )
@@ -75,8 +75,8 @@ shinyServer(function(input, output, session) {
           ),
           column(width = 7,
                  tabsetPanel(
-                   tabPanel('Reestimate Plots', uiOutput('reestimateUI')),
-                   tabPanel('Bar Plots', uiOutput('barUI')))
+                   tabPanel('Reestimate Trend Plots', uiOutput('reestimateUI')),
+                   tabPanel('Interactive Bar Plots', uiOutput('barUI')))
           )
         )
       )

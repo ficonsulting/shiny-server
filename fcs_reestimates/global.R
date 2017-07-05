@@ -322,7 +322,6 @@ cohort_xy <- function(df, view_type) {
            xaxis = list(showgrid = FALSE, title = 'Original Subsidy Rate'),
            yaxis = list(showgrid = FALSE, title = 'Current Subsidy Rate'),
            annotations = list(a, b),
-           #showlegend = FALSE,
            shapes = list(
              type = 'line',
              layer = 'above',

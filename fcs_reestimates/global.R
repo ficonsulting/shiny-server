@@ -232,7 +232,7 @@ bubble_plot <- function(df, in_fy) {
                      plot_data$orig_sr), na.rm = TRUE) + 1
   
   a <- list(
-    text = 'Subsidy Increases',
+    text = 'Subsidy Increase',
     showarrow = FALSE,
     y = max_point,
     x = min_point,
@@ -241,7 +241,7 @@ bubble_plot <- function(df, in_fy) {
   )
   
   b <- list(
-    text = 'Subsidy Decreases',
+    text = 'Subsidy Decrease',
     showarrow = FALSE,
     y = min_point,
     x = max_point,
@@ -287,7 +287,7 @@ cohort_xy <- function(df, view_type) {
                      df$orig_sr), na.rm = TRUE) + 1
   
   a <- list(
-    text = 'Subsidy Increases',
+    text = 'Subsidy Increase',
     showarrow = FALSE,
     y = max_point,
     x = min_point,
@@ -296,7 +296,7 @@ cohort_xy <- function(df, view_type) {
   )
   
   b <- list(
-    text = 'Subsidy Decreases',
+    text = 'Subsidy Decrease',
     showarrow = FALSE,
     y = min_point,
     x = max_point,

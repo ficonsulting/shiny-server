@@ -95,9 +95,9 @@ get_plot_df <- function(view_type, agency_df, program_df) {
   
 }
 
-get_caption <- function(plot_data, input_type) {
+get_caption <- function(plot_data, what_input) {
   
-  if (input_type == 'Agency') {
+  if (what_input == 'Agency') {
     
     caption <- plot_data[['h1']][1] %>% as.character()
     

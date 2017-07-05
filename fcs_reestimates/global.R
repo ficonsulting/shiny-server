@@ -253,15 +253,14 @@ bubble_plot <- function(df, in_fy) {
   
   
   plot_ly(plot_data,  
-          x = ~orig_sr, y = ~cur_sr, color = ~wrapped_label, size = ~size, colors = 'Paired',
+          x = ~orig_sr, y = ~cur_sr, color = ~wrapped_label, size = ~size, colors = 'Paired', hoverinfo = 'text',
           type = 'scatter', mode = 'markers', sizes = c(min(plot_data$size, na.rm = T) + 5, 
                                                         min(mean(plot_data$size, na.rm = T), 125) + 5),
           marker = list(symbol = 'circle', sizemode = 'diameter',
                         line = list(width = 2, color = '#000000')),
           text = ~paste('Cohort:', co_yr, '</br> Program:', prog,
                         '</br> Original Rate:', round(orig_sr, 2),
-                        '</br> Current Rate:', round(cur_sr, 2)),
-          hoverinfo = 'text') %>%
+                        '</br> Current Rate:', round(cur_sr, 2))) %>%
     layout(title = paste('Subsidy Distribution By Cohort \u2013', caption),
            shapes = list(
              type = 'line',

@@ -30,6 +30,8 @@ require(plotly); require(dplyr); require(htmlTable)
 # is reported in supplement for years after 2008) - anything 2008 and prior will double count direct
 # student loans and FFEL Guarantees
 
+# Ginnie Mae guarantees should also be excluded
+
 edu_progs <- c("SUBSIDIZED STAFFORD", "UNSUBSIDIZED STAFFORD", "PLUS", "CONSOLIDATED")
 gnma <- "GUARANTEES OF MORTGAGE BACKED SECURITIES"
 
@@ -38,7 +40,10 @@ prog_filter <- c(edu_progs, gnma)
 re <- reestimate_rates %>% filter(!prog %in% prog_filter) %>%
   mutate(rate_chg = cur_sr - orig_sr)
 
-lastyear <- re %>% filter(fy == max(fy))
+re_w_gnma <- reestimate_rates %>% filter(!prog %in% edu_progs) %>%
+  mutate(rate_chg = cur_sr - orig_sr)
+
+lastyear <- re_w_gnma %>% filter(fy == max(fy))
 
 ```
 
@@ -88,7 +93,7 @@ compare_bars <- function(df, lab, metric, plt_title, margin, ann_placement = 'ri
   if (ann_placement == 'right') {
   
   a <- list(
-  text = paste('Cummulative Total:', get_millions(sum(df[[metric]]))),
+  text = paste('Cummulative Total:', get_billions(sum(df[[metric]]))),
   showarrow = FALSE,
   font = list(color = '#7D7D7D'),
   y = 1,
@@ -100,7 +105,7 @@ compare_bars <- function(df, lab, metric, plt_title, margin, ann_placement = 'ri
   } else if (ann_placement == 'left') {
     
   a <- list(
-  text = paste('Cummulative Total:', get_millions(sum(df[[metric]]))),
+  text = paste('Cummulative Total:', get_billions(sum(df[[metric]]))),
   showarrow = FALSE,
   font = list(color = '#7D7D7D'),
   y = nrow(df)/2,
@@ -136,7 +141,7 @@ get_millions <- function(x) {
   
   } else {
     
-    paste0('$', formatC(x/1e6, format = 'f', big.mark = ',', digits = 2), ' B')
+    paste0('$', formatC(x/1e6, format = 'f', big.mark = ',', digits = 2), ' M')
     
   } 
   
@@ -160,7 +165,7 @@ get_billions <- function(x) {
 ```
 
 
-##Introduction
+##Background
 
 The U.S. Government's portfolio of loans extended through Federal credit programs has experienced rapid growth over the last twenty years. With a balance sheet of active loans well over $3 Trillion, the U.S. Government manages a loan portfolio much larger than any bank. At FI Consulting we have extensive domain expertise in Credit Reform, the budgeting system employed to measure the cost of Federal credit programs. In this post we will take a closer look into this massive portfolio of loans through the lens of Credit Reform,  using data published annually in the Federal Credit Supplement to the President's Budget.  
 
@@ -278,7 +283,6 @@ htmlTable(head(prog_table, 5),
 
 ***
 
-
 ```{r}
 
 top_list <- prog_list %>% filter(fy == 2018) %>% 
@@ -299,8 +303,6 @@ for (p in top_list) {
 
 ```
 
-***
-
 The plot below displays how disbursements have increased for these top programs over the last decade.  The lines show the change in lifetime disbursements relative to what was reported as of 2006.  The two housing programs have grown steadily following the housing downturn with total disbursements having increased about 200% for each program. The Federal Direct Student loan program on the other hand has sharply grown to over 700% of what was reported as of budget year 2006.  Some of this volume appears to have been shifted from the FFEL (Federal Family Education Loan) Guarantee program as loans are no longer originated under this program, however older cohorts still undergo subsidy re-estimates on a yearly basis.
 
 <center>
@@ -316,7 +318,7 @@ plot_lines(top_five, 'pct_chg', 'prog', 'Lifetime Disbursement Growth - Top Five
 
 As mentioned in the introduction, the subsidy cost of each program cohort is estimated at the beginning of the cohort’s life and then adjusted as new information becomes available.  From the FCS we have the original subsidy rate forecast as well as the subsidy rate re-estimate as of each subsequent budget year.  By comparing the original subsidy rate forecast with the re-estimated subsidy rate we can measure the accuracy of subsidy forecasts for all loan cohorts.
 
-The following plot shows the distribution of changes in subsidy estimates for all loan cohorts published in the most recent FCS.  Each dot represents a cohort of loans, the x coordinate is the original subsidy rate and the y coordinate is the most recent subsidy rate re-estimate.  Any dot that lands on the dotted red line indicates that the current subsidy rate is equal to the original forecast.  Any point that falls below the dotted line has had a decrease in subsidy rate (downward re-estimate) and any point above has had a subsidy rate increase (upward re-estimate).  As of the most recent fiscal year, approximately 42% of all active cohorts have had a subsidy rate increase since origination.   
+The following plot shows the distribution of changes in subsidy estimates for all loan cohorts published in the most recent FCS.  Each dot represents a cohort of loans, the x coordinate is the original subsidy rate and the y coordinate is the most recent subsidy rate re-estimate.  Any point that lands on the dashed red line indicates that the current subsidy rate is equal to the original forecast.  Any point that falls below the dotted line has had a decrease in subsidy rate (downward re-estimate) and any point above has had a subsidy rate increase (upward re-estimate).  As of the most recent fiscal year, approximately 42% of all active cohorts have had a subsidy rate increase since origination.   
 
 <center>
 ```{r}
@@ -389,14 +391,21 @@ Taking a snapshot of the 2018 budget year FCS, we'll first look at current re-es
 <center>
 ```{r}
 
-lre_ly <- lre %>% filter(fy == max(fy))
+lre_ <- re_w_gnma %>% group_by(fy, h1) %>%
+  summarise(life_re = sum(life_re * 1000, na.rm = T), 
+            life_disb = sum(disb * 1000, na.rm = T),
+            curr_re = sum(cur_re * 1000, na.rm = T),
+            program_cnt = n_distinct(prog)) %>% 
+  ungroup() %>% filter(fy > 2005)
+
+lre_ly <- lre_ %>% filter(fy == max(fy))
 
 compare_bars(lre_ly, 'h1', 'curr_re', 'Current Re-estimates by Agency - 2018 FCS', 160)
 
 ```
 </center>
 
-In reviewing agency lifetime re-estimates we see that active Treasury Department programs have experienced \$100B in downward lifetime re-estimates. The Department of Housing and Urban Development on the other hand has undergone over \$80B in upward re-estimates, meaning that in aggregate subsidy cost forecasts have been revised upward for active HUD programs.  While we did see a fairly large net upward re-estimate in the most recent fiscal year, total net lifetime reestimates remain negative at -\$20.4B for all active Federal Credit programs.  To view historical trends in reestimate amounts by agency and program visit the application. 
+In reviewing agency lifetime re-estimates we see that active Treasury Department programs have experienced \$100B in downward lifetime re-estimates. The Department of Housing and Urban Development on the other hand has undergone over \$80B in upward re-estimates, meaning that in aggregate subsidy cost forecasts have been revised upward for active HUD programs.  While we did see a fairly large net upward re-estimate in the most recent fiscal year, total net lifetime reestimates remain negative at -\$20.45B for all active Federal Credit programs.  To view historical trends in reestimate amounts by agency and program visit the application. 
 
 <center>
 ```{r}

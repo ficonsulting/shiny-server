@@ -21,3 +21,7 @@ For best performance zoom out to fit all tables and visualizations into one wind
 * For agencies there is an option to view a bubble plot of the cohort subsidy rate distribution.  The marker size is scaled by lifetime disbursements.
 * The current and lifetime reestimate plot shows the historic trend of agency or program current and lifetime reestimates up to the selected budget year.
 * Under the Interactive Bar Plots tab are a variety of visualizations that summarize reestimate amounts, disbursements, and subsidy rate changes.  Choose an x-axis metric using the metric drop-down menu and select a variable to group by on the y-axis.  The options will depend on whether you view the data by agency or program.
+
+#### Disclaimer
+
+FI Consulting makes no representations or warranties that the data provided in this application is error-free. We have presented the data as accurately as possible, but cannot attest to the accuracy of the original data source. Our liability is limited and excluded to the maximum extent permitted under applicable law. We will not be liable for any direct, indirect or consequential loss or damage arising under this disclaimer or in connection with our website, whether arising in tort, contract, or otherwise – including, without limitation, any loss of profit, contracts, business, goodwill, data, income, revenue or anticipated savings.

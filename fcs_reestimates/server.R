@@ -38,7 +38,13 @@ shinyServer(function(input, output, session) {
     column(width = 7,
            tabsetPanel(
              tabPanel('Reestimate Trend Plots', uiOutput('reestimateUI')),
-             tabPanel('Interactive Bar Plots', uiOutput('barUI')))
+             tabPanel('Interactive Bar Plots', 
+                      column(width = 12,
+                             uiOutput('barplot_select'),
+                             column(width = 12,
+                                    uiOutput('barplotUI')
+                             )
+                      )))
     )
     
   })
@@ -109,6 +115,23 @@ shinyServer(function(input, output, session) {
     
   })
   
+  output$prog_warning_bar <- renderUI({
+    tags$html(
+      tags$body(
+        br(),
+        br(),
+        h2('Select a Program'),
+        br(),
+        p(h4('Choose an avaliable program from the table to the left along with a budget year 
+             to view interactive visualizations.')), 
+        br(),
+        p(h4('Click the Clear Program Selection button to reset the view or click another value in the table 
+             to choose a different program.'))
+        )
+        )
+    
+  })
+  
   # Render first tab panel - scatter plot and historic reestimate plot
   
   output$reestimateUI <- renderUI({
@@ -141,77 +164,43 @@ shinyServer(function(input, output, session) {
     
   })
 
-  
   # Render Bar/Dumbbell Plots
   
-  output$barUI <- renderUI({
-      
-    column(width = 12,
-           uiOutput('barplot_select'),
-           uiOutput('barplot_radio'),
-           hr(),
-           column(width = 12,
-                  uiOutput('barplotUI')
-           )
-    )
-    
-  })
-  
   output$barplotUI <- renderUI({
-    
-    validate(need(!is.null(input$bar_metric), 'Calculating...'))
-    
-    if (!input$bar_metric %in% c('disb', 'cur_re', 'life_re')) {
-      
-      plotlyOutput('dumbbell_plots')
-      
-    } else {
-      
+
+    if (input$view_type == 'Agency' | !is.null(program_df())) {
+
       plotlyOutput('bar_plots')
-      
-    }
-    
-  })
-  
-  # Render Barplot Inputs
-  
-  output$barplot_radio <- renderUI({
-    
-    if (input$view_type == 'Agency') {
-      
-      column(width = 6,
-             selectInput('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr', 'Program Name' = 'prog'))
-      )
-      
+
     } else {
-      
-      column(width = 6,
-             selectInput('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr'))
-      )
-      
+
+      column(width = 12, htmlOutput('prog_warning_bar'))
+
     }
-    
+
   })
   
   output$barplot_select <- renderUI({
     
     if (input$view_type == 'Agency') {
-      column(width = 6,
-             selectInput('bar_metric', 'Select Metric:', choices = c('Lifetime Reestimates' = 'life_re',
-                                                                     'Current Reestimates' = 'cur_re',
-                                                                     'Lifetime Disbursements' = 'disb'
-             ))
-      )
+      fluidRow(
+        column(width = 6,
+             selectInput('bar_metric', 'Select Metric:', choices = program_metric_choices)
+             ),
+        column(width = 6,
+             selectInput('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr', 'Program Name' = 'prog'))
+             )
+        )
       
     } else {
       
-      column(width = 6,
-             selectInput('bar_metric', 'Select Metric:', choices = c('Lifetime Reestimates' = 'life_re',
-                                                                     'Current Reestimates' = 'cur_re',
-                                                                     'Lifetime Disbursements' = 'disb',
-                                                                     'Total Subsidy Change' = 'rate_chg',
-                                                                     'Subsidy Change - Technical' = 'perc_chg_tech',
-                                                                     'Subsidy Change - Interest' = 'perc_chg_int'))
+      fluidRow(
+        column(width = 6,
+               selectInput('bar_metric', 'Select Metric:', choices = cohort_metric_choices)
+               ),
+        column(width = 6,
+               selectInput('grp_by', 'Group By:', choices = c('Cohort Year' = 'co_yr'))
+               )
       )
       
     }
@@ -492,48 +481,31 @@ shinyServer(function(input, output, session) {
   
   output$bar_plots <- renderPlotly({
     
-    # Get Underlying Data Depending on User Selections
-    
     plot_data <- get_plot_df(input$view_type, agency_df(), program_df())
-    
-    # Display temporary error message when toggling between user inputs
     
     validate(need(length(nrow(plot_data)) > 0, 'Select a Program'))
     
     plot_data <- plot_data %>% filter(fy == input$fy)
     
-    df <- prepare_bar_data(plot_data, input$grp_by, input$bar_metric)
-    
     caption <- get_caption(plot_data, input$view_type)
     
     plt_title <- paste(caption, '-', 
                        names(cohort_metric_choices[cohort_metric_choices == input$bar_metric]))
     
-    compare_bars(df, input$grp_by, plt_title, 
-                 names(cohort_metric_choices[cohort_metric_choices == input$bar_metric]))
+    validate(need(!is.null(input$bar_metric), 'Calculating...'))
     
-  })
-  
-  output$dumbbell_plots <- renderPlotly({
-    
-    validate(need(!is.null(program_df()), 'Select a Program'))
-    
-    plot_data <- if (is.null(program_df())) {
+    if (!input$bar_metric %in% c('disb', 'cur_re', 'life_re')) {
       
-      NULL
+      dumbbell_plt(plot_data, input$bar_metric, plt_title)
       
     } else {
       
-      program_df() %>% filter(fy == input$fy)
+      df <- prepare_bar_data(plot_data, input$grp_by, input$bar_metric)
+      
+      compare_bars(df, input$grp_by, plt_title, 
+                   names(cohort_metric_choices[cohort_metric_choices == input$bar_metric]))
       
     }
-    
-    caption <- get_caption(plot_data, input$view_type)
-    
-    plt_title <- paste(caption, '-', 
-                       names(cohort_metric_choices[cohort_metric_choices == input$bar_metric]))
-    
-    dumbbell_plt(plot_data, input$bar_metric, plt_title)
     
   })
   

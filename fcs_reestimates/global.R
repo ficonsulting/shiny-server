@@ -306,7 +306,7 @@ cohort_xy <- function(df, view_type) {
   
   caption <- get_caption(df, view_type)
   
-  plot_ly(df, x = ~orig_sr, y = ~cur_sr, 
+  plot_ly(df, x = ~orig_sr, y = ~cur_sr,
           type = 'scatter', mode = 'markers', hoverinfo = 'text',
           text = ~paste('Cohort:', co_yr, '</br> Program:', prog,
                         '</br> Original Rate:', round(orig_sr, 2),

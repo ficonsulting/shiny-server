@@ -12,10 +12,6 @@ navbarPageWithInputs <- function(..., input_view) {
 shinyUI(
   
   fluidPage(
-    tags$style(type = "text/css", "#xy_plot {height: 38vh !important;}"),
-    tags$style(type = "text/css", "#reestimate_plot {height: 38vh !important;}"),
-    tags$style(type = "text/css", "#bar_plots {height: 75vh !important;}"),
-    tags$style(type = "text/css", "#dumbbell_plots {height: 75vh !important;}"),
     navbarPageWithInputs("Federal Credit Analytics", theme = "flatly.min.css", id = 'menus',
                          
                          tabPanel("Analysis", icon = icon('file-text-o', lib = 'font-awesome'), 

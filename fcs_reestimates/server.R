@@ -24,7 +24,7 @@ shinyServer(function(input, output, session) {
     fluidRow(column(width = 7, "Select Agency:",
                     selectInput("agency", NULL, choices = agency_list, selected = 'HUD', width = '100%')),
              column(width = 5, "How to Use App:",
-                    actionButton('infoBut', 'Information', width = '90%',
+                    actionButton('infoBut', 'Info', width = '90%',
                                  icon = icon('info-circle', lib = 'font-awesome')),
                     bsModal("infoModal", title = NULL, "infoBut", size = "large",
                             includeMarkdown("www/info.Rmd"))))
@@ -35,16 +35,14 @@ shinyServer(function(input, output, session) {
   
   output$tabPanelUI <- renderUI({
     
-    column(width = 7,
+    column(width = 8,
            tabsetPanel(
              tabPanel('Reestimate Trend Plots', uiOutput('reestimateUI')),
              tabPanel('Interactive Bar Plots', 
-                      column(width = 12,
-                             uiOutput('barplot_select'),
-                             column(width = 12,
-                                    uiOutput('barplotUI')
-                             )
-                      )))
+                      uiOutput('barplot_select'),
+                      uiOutput('barplotUI')
+                      )
+             )
     )
     
   })
@@ -142,19 +140,19 @@ shinyServer(function(input, output, session) {
              column(width = 10,
                     radioButtons('scatter_radio', NULL, 
                                  choices = c('Scatter', 'Bubble'), inline = T)),
-             column(width = 12,
-                    plotlyOutput('xy_plot'),
+             column(width = 11,
+                    plotlyOutput('xy_plot', height = 360),
                     hr(),
-                    plotlyOutput('reestimate_plot'))
+                    plotlyOutput('reestimate_plot', height = 360))
       )
       
     } else if (!is.null(program_df())) {
       
-      column(width = 12,
+      column(width = 11,
              br(),
-             plotlyOutput('xy_plot'),
+             plotlyOutput('xy_plot', height = 360),
              hr(),
-             plotlyOutput('reestimate_plot'))
+             plotlyOutput('reestimate_plot', height = 360))
       
     } else {
       
@@ -170,7 +168,7 @@ shinyServer(function(input, output, session) {
 
     if (input$view_type == 'Agency' | !is.null(program_df())) {
 
-      plotlyOutput('bar_plots')
+      column(width = 11, plotlyOutput('bar_plots', height = 700))
 
     } else {
 

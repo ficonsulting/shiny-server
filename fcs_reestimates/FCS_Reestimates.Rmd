@@ -167,23 +167,23 @@ get_billions <- function(x) {
 
 ##Background
 
-The U.S. Government's portfolio of loans extended through Federal credit programs has experienced rapid growth over the last twenty years. With a balance sheet of active loans well over $3 Trillion, the U.S. Government manages a loan portfolio much larger than any bank. At FI Consulting we have extensive domain expertise in Credit Reform, the budgeting system employed to measure the cost of Federal credit programs. In this post we will take a closer look into this massive portfolio of loans through the lens of Credit Reform,  using data published annually in the Federal Credit Supplement to the President's Budget.  
+The U.S. Government's portfolio of loans extended through Federal Credit programs has experienced rapid growth over the last decade. With a balance sheet of active loans well over \$3 Trillion, the U.S. Government manages a loan portfolio larger than any bank. Budgetary cost estimates and loan volumes for Federal Credit programs are published annually in the [Federal Credit Supplement](https://www.gpo.gov/fdsys/pkg/BUDGET-2018-FCS/pdf/BUDGET-2018-FCS.pdf) (FCS) to the President’s Budget. This analysis utilizes data extracted from publicly available Federal Credit Supplements going back over 20 years. In total, over 2,250 Federal Credit program cohorts are included in this rich data set. In this post, we will briefly introduce the budget process for Federal Credit programs then explore and visualize the FCS data.
 
-This post is also accompanied by an application to interactively explore the Federal Credit Supplement data for all agencies and credit programs going back to budget year 1998.  Click the 'Interactive' button at the top of the page to view the application.  Data utilized in this analysis along with the interactive application is as of the 2018 budget year Federal Credit Supplement.
+In the next section, we will discuss what Credit Reform is.  In Section 3 we discuss the growth of Federal Credit programs by agency, highlighting housing and student loan programs.  In Section 4 we discuss cost estimates and how the subsidy cost of a program changes over time.  Lastly, we will take a deeper dive into subsidy cost estimates for Treasury Department programs established in response to the financial crisis.
 
-In the next section, we will discuss what Credit Reform is.  In Section 3 we discuss the growth of Federal Credit programs by agency, highlighting housing and student loan programs.  In Section 4 we discuss cost estimates and how the subsidy cost of a program changes over time.  Lastly we will take a deeper dive into subsidy cost estimates for Treasury Department programs established in response to the financial crisis.
+This post is also accompanied by an application to interactively explore the Federal Credit Supplement data for all agencies and credit programs going back to budget year 1998. Click the ‘Interactive’ button at the top of the page to view the application. Data used in this analysis along with the interactive application is reported as of the 2018 budget year Federal Credit Supplement.
 
 #### What is Credit Reform
 
-The Federal Credit Reform Act of 1990 (FCRA) established how the budgetary cost of Federal Credit programs is measured.  Under FCRA, the cost of a direct or guaranteed loan -- also referred to as the subsidy cost -- is equal to the present value of net cash flows over the life of the loan. Agencies estimate the subsidy cost of a cohort of loans and this estimate will dictate the amount of money that the program can lend.  The following example comes from Thomas Stanton's [Primer on Credit Reform](http://www.coffi.org/pubs/Primer%20on%20Credit%20Reform%20by%20Stanton.pdf): 
+The Federal Credit Reform Act of 1990 (FCRA) established a new framework to measure the budgetary cost of Federal Credit programs.  Under FCRA, the cost of a direct or guaranteed loan -- also referred to as the subsidy cost -- equals the present value of net cash flows over the life of the loan. If a loan's lifetime cash inflows and outflows are equal, the loan will have a subsidy cost of zero dollars and therefore a 0% subsidy rate. Loans with lifetime outflows that exceed lifetime inflows have a positive subsidy cost while loans with inflows greater than outflows have a negative subsidy cost which represents a profit.  Agencies estimate the subsidy cost of a cohort of loans or guarantees and this estimate will dictate the volume of credit that the program can extend. Below is a simplified hypothetical example:
 
-"If the estimated present value of a direct loan’s cash outflows equals \$100 and the present value of its inflows equals \$90, its subsidy cost is $10 and its subsidy rate is 10 percent. If an agency proposed to make \$2,000 of these loans, it would seek an appropriation of 10 percent of the desired face value, or \$200." 
-
-Agencies re-estimate subsidy costs on an annual basis in order to keep financing accounts in a break-even position.  These re-estimates are provided through permanent indefinite budget authority under FCRA and do not require congressional action or count against an agency’s discretionary funds allocation.  In other words as loan cohorts age  and repay or default,  agencies re-estimate the credit subsidy cost and accordingly allocate funds to keep budget accounts balanced. 
-
-Subsidy rate and re-estimate amount details are published in the Federal Credit Supplement (FCS) to the President's Budget on an annual basis.  This analysis utilizes 20 years of data published in the supplement for over 2,250 Federal Credit program cohorts -- for details on data preparation check out the appendix at the end of this post.  
-
-For more detailed background information on the budgeting process for Federal Credit programs Douglas Elliot's [Budgeting for Credit Programs: A Primer](http://www.coffi.org/pubs/Budgeting%20Primer.pdf) is another good resource.
+* An agency proposes to fund \$100M of direct loans through a new program
+    + The estimated present value of cash inflows (repayments of principal, interest, fees) for this cohort of loans equals \$95M.
+    + The estimated present value of cash outflows (loan disbursements) equals \$100M.
+    + The subsidy cost of this loan cohort is \$5M and the subsidy rate is 5% (\$5M/\$100M).
+    + The agency will therefore seek an appropriation of \$5M to fund the cohort of loans.
+  
+Agencies update -- or re-estimate -- subsidy costs on an annual basis to ensure that subsidy estimates in the budget are consistent with subsequent cash flows.  Funding for re-estimates is provided through permanent indefinite budget authority under FCRA and do not require congressional action or count against an agency’s discretionary funds allocation.  In other words as loan cohorts age  and repay or default,  agencies re-estimate the credit subsidy cost and accordingly allocate funds to keep budget accounts balanced. Subsidy rate and re-estimate amount details are recorded annually in the Federal Credit Supplement.   
 
 ***
 
@@ -191,7 +191,7 @@ For more detailed background information on the budgeting process for Federal Cr
 
 ###Exploring The 2018 Budget Year FCS
 
-The following tables and plots provide a current snapshot of the Federal Credit landscape as of the most recently published [Federal Credit Supplement](https://www.gpo.gov/fdsys/pkg/BUDGET-2018-FCS/pdf/BUDGET-2018-FCS.pdf). This data is for budget year 2018 and was made public in May 2017. We will be taking a closer look at data contained in tables 7 and 8 of the FCS which detail lifetime disbursement amounts, current subsidy rates, and re-estimate amounts for all active Federal Credit programs.
+The following tables and plots provide a current snapshot of the Federal Credit landscape as of the most recently published Federal Credit Supplement. This data is for budget year 2018 and was made public in May 2017. We will be taking a closer look at data contained in tables 7 and 8 of the FCS which detail lifetime disbursement amounts, current subsidy rates, and re-estimate amounts for all active Federal Credit programs.
 
 ####Lifetime Disbursements
 
@@ -303,7 +303,7 @@ for (p in top_list) {
 
 ```
 
-The plot below displays how disbursements have increased for these top programs over the last decade.  The lines show the change in lifetime disbursements relative to what was reported as of 2006.  The two housing programs have grown steadily following the housing downturn with total disbursements having increased about 200% for each program. The Federal Direct Student loan program on the other hand has sharply grown to over 700% of what was reported as of budget year 2006.  Some of this volume appears to have been shifted from the FFEL (Federal Family Education Loan) Guarantee program as loans are no longer originated under this program, however older cohorts still undergo subsidy re-estimates on a yearly basis.
+The plot below displays how disbursements have increased for these top programs over the last decade.  The lines show the change in cumulative lifetime disbursements relative to what was reported as of 2006.  The two housing programs have grown steadily following the housing downturn with total disbursements having increased about 200% for each program. The Federal Direct Student loan program on the other hand has sharply grown to over 700% of what was reported as of budget year 2006.  Some of this volume appears to have been shifted from the FFEL (Federal Family Education Loan) Guarantee program as loans are no longer originated under this program, however older cohorts still undergo subsidy re-estimates on a yearly basis.
 
 <center>
 ```{r}
@@ -612,7 +612,7 @@ htmlTable(head(data_prep, n = 5),
 
 #### Program Naming
 
-In addition program naming conventions change over the years in the FCS. For instance the Department of Agriculture’s water and waste disposal loan guarantee program has the following name formatting in the 20 years of federal credit supplements: 
+In addition program naming conventions change over the years in the FCS. For instance the Department of Agriculture’s water and waste disposal loan guarantee program has the following name formatting in the 20 years of Federal Credit Supplements: 
 
 * Guaranteed Water and Waste Disposal Loans 
 * Water and Waste Disposal Guaranteed Loans
